@@ -19,5 +19,6 @@
     ./foundry-vtt.nix
     ./headlamp.nix
     ./traefik.nix
+    ./vaultwarden.nix
   ];
 }
