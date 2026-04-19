@@ -1,13 +1,11 @@
-{
-  age.secrets = {
-    cloudflare-api-token = {
-      owner = "root";
-      file = ./files/cloudflare-api-token.age;
-    };
-
-    k3s-token = {
-      owner = "root";
-      file = ./files/k3s-token.age;
-    };
-  };
+{lib, ...}: let
+  secrets = lib.genAttrs [
+    "cloudflare-api-token"
+    "k3s-token"
+  ];
+in {
+  age.secrets = secrets (secret: {
+    owner = "root";
+    file = ./files/${secret}.age;
+  });
 }

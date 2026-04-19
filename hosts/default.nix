@@ -16,6 +16,7 @@ in {
       inputs.agenix.nixosModules.default
       inputs.determinate.nixosModules.default
       inputs.disko.nixosModules.disko
+      self.nixosModules.kubectl
       self.nixosModules.packages
       self.nixosModules.secrets
     ];
