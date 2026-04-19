@@ -12,6 +12,5 @@
     ./authelia.nix
     ./foundry-vtt.nix
     ./traefik.nix
-    ./whoami.nix
   ];
 }
