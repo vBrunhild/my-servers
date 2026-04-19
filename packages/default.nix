@@ -7,11 +7,11 @@
   system = pkgs.stdenv.hostPlatform.system;
 in {
   environment.systemPackages = map lib.lowPrio [
-    inputs.brunhild.packages.${system}.neovim
     pkgs.bottom
     pkgs.coreutils-full
     pkgs.dust
     pkgs.eza
+    pkgs.git
     pkgs.ripgrep
   ];
 
