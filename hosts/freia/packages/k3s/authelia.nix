@@ -1,4 +1,24 @@
-{
+{config, ...}: let
+  inherit (config.age) secrets;
+in {
+  kubectl.secrets.authelia-oidc-jwk = {
+    namespace = "authelia";
+    key = "oidc.jwk.RS256.pem";
+    file = secrets.authelia-oidc-jwk.path;
+  };
+
+  kubectl.secrets.authelia-storage-key = {
+    namespace = "authelia";
+    key = "storage.encryption.key";
+    file = secrets.authelia-storage-key.path;
+  };
+
+  kubectl.secrets.authelia-users = {
+    namespace = "authelia";
+    key = "users_database.yml";
+    file = secrets.authelia-users.path;
+  };
+
   services.k3s.autoDeployCharts.authelia = {
     name = "authelia";
     repo = "https://charts.authelia.com";
@@ -10,24 +30,21 @@
     values = {
       ingress.enabled = false;
 
+      secret.additionalSecrets = {
+        authelia-oidc-jwk = {};
+        authelia-storage-key = {};
+        authelia-users = {};
+      };
+
       pod = {
+        kind = "Deployment";
         replicas = 1;
+        strategy.type = "Recreate";
+      };
 
-        extraVolumes = [
-          {
-            name = "users";
-            configMap.name = "authelia-users";
-          }
-        ];
-
-        extraVolumeMounts = [
-          {
-            name = "users";
-            mountPath = "/config/users_database.yml";
-            subPath = "users_database.yml";
-            readOnly = true;
-          }
-        ];
+      persistence = {
+        enabled = true;
+        storageClass = "local-path";
       };
 
       configMap = {
@@ -35,13 +52,14 @@
 
         authentication_backend.file = {
           enabled = true;
-          path = "/config/users_database.yml";
+          path = "/secrets/authelia-users/users_database.yml";
+          watch = true;
         };
 
         session = {
           name = "authelia_session";
-          expiration = "1h";
-          inactivity = "30m";
+          expiration = "8h";
+          inactivity = "1h";
           cookies = [
             {
               subdomain = "auth";
@@ -51,7 +69,10 @@
           ];
         };
 
-        storage.local.enabled = true;
+        storage = {
+          local.enabled = true;
+          encryption_key.secret_name = "authelia-storage-key";
+        };
 
         notifier.filesystem = {
           enabled = true;
@@ -62,36 +83,77 @@
           default_policy = "deny";
           rules = [
             {
+              domain = "foundryvtt.brunhild.org";
+              subject = ["group:admin" "group:foundryvtt"];
+              policy = "one_factor";
+            }
+            {
               domain = "*.brunhild.org";
+              subject = "group:admin";
               policy = "one_factor";
             }
           ];
         };
-      };
-    };
-  };
 
-  services.k3s.manifests.authelia-users = {
-    enable = true;
-    content = {
-      apiVersion = "v1";
-      kind = "ConfigMap";
-      metadata = {
-        name = "authelia-users";
-        namespace = "authelia";
-      };
+        identity_providers.oidc = {
+          enabled = true;
 
-      data."users_database.yml" =
-        # yaml
-        ''
-          users:
-            brunhild:
-              displayname: brunhild
-              password: $argon2id$v=19$m=65536,t=3,p=4$pHw4bsB9sMrDJPgUotruoQ$jxYvUkFv4Il/JYDCxy3WILj5CN5JML58Az5HrtBYEAQ
-              email: brunomoretti100@gmail.com
-              groups:
-                - admin
-        '';
+          authorization_policies.headlamp = {
+            default_policy = "deny";
+            rules = [
+              {
+                policy = "one_factor";
+                subject = "group:admin";
+              }
+            ];
+          };
+
+          claims_policies.headlamp.id_token = [
+            "email"
+            "email_verified"
+            "groups"
+            "preferred_username"
+            "name"
+          ];
+
+          jwks = [
+            {
+              key_id = "main";
+              algorithm = "RS256";
+              use = "sig";
+              key.path = "/secrets/authelia-oidc-jwk/oidc.jwk.RS256.pem";
+            }
+          ];
+
+          clients = [
+            {
+              client_id = "headlamp";
+              client_secret = "$argon2id$v=19$m=65536,t=3,p=4$Ec5P5iaKZntZEzN5mKHIRw$XWnK0sMyiU9XxU/K6jNC+t2h/LXjZjF+rL5mPJXrJrw";
+
+              client_name = "Headlamp";
+              claims_policy = "headlamp";
+              public = false;
+              authorization_policy = "headlamp";
+
+              redirect_uris = [
+                "https://headlamp.brunhild.org/oidc-callback"
+              ];
+
+              scopes = [
+                "openid"
+                "profile"
+                "email"
+                "groups"
+              ];
+
+              require_pkce = true;
+              pkce_challenge_method = "S256";
+              token_endpoint_auth_method = "client_secret_basic";
+              userinfo_signed_response_alg = "none";
+            }
+          ];
+        };
+      };
     };
   };
 
