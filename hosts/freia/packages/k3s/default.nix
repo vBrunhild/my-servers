@@ -9,6 +9,8 @@
   };
 
   imports = [
+    ./authelia.nix
     ./traefik.nix
+    ./whoami.nix
   ];
 }
