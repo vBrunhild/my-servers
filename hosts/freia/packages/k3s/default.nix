@@ -4,8 +4,14 @@
     role = "server";
     tokenFile = config.age.secrets.k3s-token.path;
     extraFlags = [
-      "--disable=servicelb"
       "--disable=traefik"
     ];
   };
+
+  imports = [
+    ./authelia.nix
+    ./foundry-vtt.nix
+    ./traefik.nix
+    ./whoami.nix
+  ];
 }

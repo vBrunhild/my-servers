@@ -52,17 +52,18 @@
   in {
     nixosConfigurations = import ./hosts inputs;
 
-    nixosModules = {
-      packages = import ./packages;
-      secrets = import ./secrets;
-    };
+    nixosModules =
+      {
+        packages = import ./packages;
+        secrets = import ./secrets;
+      }
+      // import ./modules;
 
     deploy.nodes.freia = {
       hostname = "freia.brunhild.org";
       profiles.system = {
         user = "root";
         sshUser = "root";
-        remoteBuild = true;
         path =
           deployPkgs.x86_64-linux.deploy-rs.lib.activate.nixos
           self.nixosConfigurations.freia;

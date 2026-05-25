@@ -1,7 +1,16 @@
 {
+  pkgs,
+  lib,
+  ...
+}: {
+  environment.systemPackages = map lib.lowPrio [
+    pkgs.jq
+    pkgs.kubectl
+    pkgs.kubernetes-helm
+  ];
+
   imports = [
-    ./k3s.nix
+    ./k3s
     ./ssh.nix
-    # ./vault.nix
   ];
 }
