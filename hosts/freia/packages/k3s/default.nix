@@ -17,6 +17,7 @@
   imports = [
     ./authelia.nix
     ./foundry-vtt.nix
+    ./gatus.nix
     ./headlamp.nix
     ./traefik.nix
     ./vaultwarden.nix
