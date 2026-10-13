@@ -24,6 +24,14 @@ in {
     values = {
       ingress.enabled = false;
 
+      resources = {
+        requests = {
+          cpu = "25m";
+          memory = "32Mi";
+        };
+        limits.memory = "256Mi";
+      };
+
       config.oidc = {
         usePKCE = true;
         secret.create = false;

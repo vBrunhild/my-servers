@@ -82,6 +82,14 @@ in {
                 image = "twinproduction/gatus:v5.37.0";
                 ports = [{containerPort = 8080;}];
 
+                resources = {
+                  requests = {
+                    cpu = "10m";
+                    memory = "32Mi";
+                  };
+                  limits.memory = "128Mi";
+                };
+
                 volumeMounts = [
                   {
                     name = "config";

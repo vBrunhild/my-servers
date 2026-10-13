@@ -40,6 +40,13 @@ in {
         kind = "Deployment";
         replicas = 1;
         strategy.type = "Recreate";
+        resources = {
+          requests = {
+            cpu = "50m";
+            memory = "64Mi";
+          };
+          limits.memory = "512Mi";
+        };
       };
 
       persistence = {

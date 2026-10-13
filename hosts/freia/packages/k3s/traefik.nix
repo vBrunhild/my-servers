@@ -22,6 +22,14 @@ in {
         replicas = 1;
       };
 
+      resources = {
+        requests = {
+          cpu = "100m";
+          memory = "128Mi";
+        };
+        limits.memory = "1Gi";
+      };
+
       ports = {
         web.http.redirections.entryPoint = {
           to = "websecure";

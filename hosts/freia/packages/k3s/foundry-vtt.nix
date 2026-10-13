@@ -101,6 +101,14 @@ in {
                 image = "felddy/foundryvtt:13.351";
                 ports = [{containerPort = 30000;}];
 
+                resources = {
+                  requests = {
+                    cpu = "250m";
+                    memory = "512Mi";
+                  };
+                  limits.memory = "4Gi";
+                };
+
                 env = [
                   {
                     name = "FOUNDRY_USERNAME";
