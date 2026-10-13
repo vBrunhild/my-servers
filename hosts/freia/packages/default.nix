@@ -11,6 +11,7 @@
 
   imports = [
     ./k3s
+    ./restic.nix
     ./ssh.nix
   ];
 }
