@@ -32,7 +32,7 @@ in {
 
       service.spec.externalTrafficPolicy = "Local";
 
-      logs.access.enabled = true;
+      accessLog.enabled = true;
 
       experimental.plugins.crowdsec-bouncer = {
         moduleName = "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin";
