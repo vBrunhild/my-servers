@@ -85,6 +85,10 @@ in {
       };
       spec = {
         replicas = 1;
+        strategy = {
+          type = "Recreate";
+          rollingUpdate = null;
+        };
         selector.matchLabels.app = "foundryvtt";
         template = {
           metadata.labels.app = "foundryvtt";
