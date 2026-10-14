@@ -27,7 +27,7 @@ let
       })
       (publicEndpoint "Authelia" "https://auth.brunhild.org/api/health" {})
       (publicEndpoint "Vaultwarden" "https://vaultwarden.brunhild.org/alive" {})
-      (publicEndpoint "Headlamp" "https://headlamp.brunhild.org" {})
+      (publicEndpoint "Dozzle" "https://dozzle.brunhild.org/healthcheck" {})
       {
         name = "Foundry VTT";
         group = "Applications";
