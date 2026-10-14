@@ -11,7 +11,7 @@ in {
     name = "traefik";
     repo = "https://helm.traefik.io/traefik";
     version = "41.7.1";
-    hash = "sha256-M24VAFGdhyf0QJFbqB2pnuMi+ud6GWcf5mEw/B6LcAA=";
+    hash = "sha256-+e3Vymmf8PXqsU325P7voV91l6m1bwscAfYImx7suvE=";
     createNamespace = true;
     targetNamespace = "traefik-system";
 
