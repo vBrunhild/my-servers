@@ -31,10 +31,7 @@
       "x86_64-linux"
     ];
 
-    allPkgs = forAllSystems (
-      system:
-        import nixpkgs {inherit system;}
-    );
+    allPkgs = forAllSystems (system: nixpkgs.legacyPackages.${system});
 
     deployPkgs = forAllSystems (system:
       import nixpkgs {
