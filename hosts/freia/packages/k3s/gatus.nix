@@ -31,10 +31,9 @@ let
       {
         name = "Foundry VTT";
         group = "Applications";
-        url = "http://foundryvtt.foundryvtt.svc.cluster.local";
+        url = "http://foundryvtt.foundryvtt.svc.cluster.local/api/status";
         interval = "60s";
-        client.ignore-redirect = true;
-        conditions = ["[STATUS] == any(200, 302)"];
+        conditions = ["[STATUS] == 200"];
       }
     ];
   };

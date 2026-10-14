@@ -128,7 +128,7 @@ in {
                   }
                   {
                     name = "FOUNDRY_HOSTNAME";
-                    value = "foundry.brunhild.org";
+                    value = "foundryvtt.brunhild.org";
                   }
                   {
                     name = "FOUNDRY_PROXY_SSL";
@@ -153,7 +153,7 @@ in {
 
                 startupProbe = {
                   httpGet = {
-                    path = "/";
+                    path = "/api/status";
                     port = 30000;
                   };
                   failureThreshold = 30;
@@ -162,7 +162,7 @@ in {
 
                 readinessProbe = {
                   httpGet = {
-                    path = "/";
+                    path = "/api/status";
                     port = 30000;
                   };
                   initialDelaySeconds = 10;
