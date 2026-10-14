@@ -22,7 +22,7 @@ in {
   services.k3s.autoDeployCharts.authelia = {
     name = "authelia";
     repo = "https://charts.authelia.com";
-    version = "0.11.5";
+    version = "0.11.22";
     hash = "sha256-OdSSeITp9p4de4oBJQyfKqScxJR1SmlyQUCCFzWmbso=";
     createNamespace = true;
     targetNamespace = "authelia";
