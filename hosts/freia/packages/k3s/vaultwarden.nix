@@ -55,6 +55,14 @@ in {
                 image = "vaultwarden/server:1.37.4";
                 ports = [{containerPort = 80;}];
 
+                resources = {
+                  requests = {
+                    cpu = "50m";
+                    memory = "64Mi";
+                  };
+                  limits.memory = "512Mi";
+                };
+
                 env = [
                   {
                     name = "DOMAIN";

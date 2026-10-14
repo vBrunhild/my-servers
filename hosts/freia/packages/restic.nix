@@ -1,10 +1,27 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }: let
-  kubectl = "${pkgs.kubectl}/bin/kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml -n foundryvtt";
-  replicasFile = "/run/restic-backups-b2/foundryvtt-replicas";
+  stoppedApps = ["foundryvtt" "vaultwarden"];
+
+  kubectl = app: "${pkgs.kubectl}/bin/kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml -n ${app}";
+  replicasFile = app: "/run/restic-backups-b2/${app}-replicas";
+
+  stopApp = app: ''
+    ${kubectl app} get deployment ${app} -o jsonpath='{.spec.replicas}' > ${replicasFile app}
+    ${kubectl app} scale deployment ${app} --replicas=0
+    if [ -n "$(${kubectl app} get pods -l app=${app} -o name)" ]; then
+      ${kubectl app} wait --for=delete pod -l app=${app} --timeout=120s
+    fi
+  '';
+
+  restoreApp = app: ''
+    if [ -f ${replicasFile app} ]; then
+      ${kubectl app} scale deployment ${app} --replicas="$(cat ${replicasFile app})"
+    fi
+  '';
 in {
   services.restic.backups.b2 = {
     environmentFile = config.age.secrets.restic-b2.path;
@@ -20,19 +37,9 @@ in {
       "/var/lib/foundryvtt/Logs"
     ];
 
-    backupPrepareCommand = ''
-      ${kubectl} get deployment foundryvtt -o jsonpath='{.spec.replicas}' > ${replicasFile}
-      ${kubectl} scale deployment foundryvtt --replicas=0
-      if [ -n "$(${kubectl} get pods -l app=foundryvtt -o name)" ]; then
-        ${kubectl} wait --for=delete pod -l app=foundryvtt --timeout=120s
-      fi
-    '';
+    backupPrepareCommand = lib.concatMapStrings stopApp stoppedApps;
 
-    backupCleanupCommand = ''
-      if [ -f ${replicasFile} ]; then
-        ${kubectl} scale deployment foundryvtt --replicas="$(cat ${replicasFile})"
-      fi
-    '';
+    backupCleanupCommand = lib.concatMapStrings restoreApp stoppedApps;
 
     pruneOpts = [
       "--keep-daily 7"

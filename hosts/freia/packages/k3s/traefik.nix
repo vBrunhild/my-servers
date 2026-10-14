@@ -22,12 +22,41 @@ in {
         replicas = 1;
       };
 
+      resources = {
+        requests = {
+          cpu = "100m";
+          memory = "128Mi";
+        };
+        limits.memory = "1Gi";
+      };
+
+      service.spec.externalTrafficPolicy = "Local";
+
+      logs.access.enabled = true;
+
+      experimental.plugins.crowdsec-bouncer = {
+        moduleName = "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin";
+        version = "v1.7.1";
+      };
+
+      volumes = [
+        {
+          name = "crowdsec-bouncer-key";
+          mountPath = "/etc/crowdsec-bouncer";
+          type = "secret";
+        }
+      ];
+
       ports = {
         web.http.redirections.entryPoint = {
           to = "websecure";
           scheme = "https";
           permanent = true;
         };
+
+        websecure.http.middlewares = [
+          "traefik-system-crowdsec-bouncer@kubernetescrd"
+        ];
       };
 
       additionalArguments = [
