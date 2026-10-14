@@ -4,6 +4,7 @@
     "authelia-storage-key"
     "authelia-users"
     "cloudflare-api-token"
+    "crowdsec-bouncer-key"
     "dozzle-oidc"
     "foundry-admin-key"
     "foundry-license-key"

@@ -10,6 +10,7 @@
 
   imports = [
     ./authelia.nix
+    ./crowdsec.nix
     ./dozzle.nix
     ./foundry-vtt.nix
     ./gatus.nix

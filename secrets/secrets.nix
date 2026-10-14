@@ -6,6 +6,7 @@ in {
   "files/authelia-storage-key.age".publicKeys = [brunhild freia];
   "files/authelia-users.age".publicKeys = [brunhild freia];
   "files/cloudflare-api-token.age".publicKeys = [brunhild freia];
+  "files/crowdsec-bouncer-key.age".publicKeys = [brunhild freia];
   "files/dozzle-oidc.age".publicKeys = [brunhild freia];
   "files/foundry-admin-key.age".publicKeys = [brunhild freia];
   "files/foundry-license-key.age".publicKeys = [brunhild freia];
