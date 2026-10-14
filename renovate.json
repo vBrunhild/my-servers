@@ -34,6 +34,12 @@
   ],
   "packageRules": [
     {
+      "description": "FlakeHub tarball inputs can't be looked up; lock file maintenance updates them",
+      "matchManagers": ["nix"],
+      "matchPackageNames": ["https://flakehub.com/**"],
+      "enabled": false
+    },
+    {
       "description": "Foundry major versions can break worlds and modules",
       "matchDepNames": ["felddy/foundryvtt"],
       "matchUpdateTypes": ["major"],
