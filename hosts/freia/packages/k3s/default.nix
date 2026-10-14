@@ -10,6 +10,7 @@
 
   imports = [
     ./authelia.nix
+    ./craig.nix
     ./crowdsec.nix
     ./dozzle.nix
     ./foundry-vtt.nix

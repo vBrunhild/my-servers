@@ -14,7 +14,7 @@
       "customType": "regex",
       "description": "Container images in k3s manifests",
       "managerFilePatterns": ["/^hosts/.+\\.nix$/"],
-      "matchStrings": ["image = \"(?<depName>[^\":]+):(?<currentValue>[^\"]+)\";"],
+      "matchStrings": ["image = \"(?<depName>[^\":]+):(?<currentValue>[^\"@]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\";"],
       "datasourceTemplate": "docker"
     },
     {
@@ -42,6 +42,12 @@
     {
       "description": "Foundry major versions can break worlds and modules",
       "matchDepNames": ["felddy/foundryvtt"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Postgres major versions need a manual data migration",
+      "matchDepNames": ["postgres"],
       "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
     }

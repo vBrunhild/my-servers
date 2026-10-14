@@ -4,6 +4,8 @@
     "authelia-storage-key"
     "authelia-users"
     "cloudflare-api-token"
+    "craig-bot-token"
+    "craig-postgres-password"
     "crowdsec-bouncer-key"
     "dozzle-oidc"
     "foundry-admin-key"
