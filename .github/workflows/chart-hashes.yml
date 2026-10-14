@@ -1,0 +1,51 @@
+name: Chart hashes
+
+on:
+  push:
+    branches: ["renovate/**"]
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - uses: cachix/install-nix-action@v31
+
+      - name: Recompute stale chart hashes
+        run: |
+          set -euo pipefail
+          charts=$(nix eval --json .#nixosConfigurations.freia.config.services.k3s.autoDeployCharts --apply builtins.attrNames | jq -r '.[]')
+          for chart in $charts; do
+            if out=$(nix build --no-link ".#nixosConfigurations.freia.config.services.k3s.autoDeployCharts.${chart}.package" 2>&1); then
+              continue
+            fi
+            specified=$(grep -oP 'specified:\s+\Ksha256-\S+' <<<"$out" || true)
+            got=$(grep -oP 'got:\s+\Ksha256-\S+' <<<"$out" || true)
+            if [ -z "$specified" ] || [ -z "$got" ]; then
+              echo "$out"
+              exit 1
+            fi
+            echo "$chart: $specified -> $got"
+            grep -rlF "$specified" hosts | xargs sed -i "s|$specified|$got|g"
+          done
+
+      - name: Evaluate system
+        run: nix eval .#nixosConfigurations.freia.config.system.build.toplevel.drvPath
+
+      - name: Push fixed hashes
+        if: startsWith(github.head_ref || github.ref_name, 'renovate/')
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "fix(k3s): update chart hashes"
+          git push

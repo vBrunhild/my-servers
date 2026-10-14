@@ -1,0 +1,43 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "gitIgnoredAuthors": ["41898282+github-actions[bot]@users.noreply.github.com"],
+  "nix": {
+    "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on monday"]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Container images in k3s manifests",
+      "managerFilePatterns": ["/^hosts/.+\\.nix$/"],
+      "matchStrings": ["image = \"(?<depName>[^\":]+):(?<currentValue>[^\"]+)\";"],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "Helm charts in services.k3s.autoDeployCharts",
+      "managerFilePatterns": ["/^hosts/.+\\.nix$/"],
+      "matchStrings": ["name = \"(?<depName>[^\"]+)\";\\s*repo = \"(?<registryUrl>[^\"]+)\";\\s*version = \"(?<currentValue>[^\"]+)\";"],
+      "datasourceTemplate": "helm"
+    },
+    {
+      "customType": "regex",
+      "description": "Traefik plugins",
+      "managerFilePatterns": ["/^hosts/.+\\.nix$/"],
+      "matchStrings": ["moduleName = \"github\\.com/(?<depName>[^\"]+)\";\\s*version = \"(?<currentValue>[^\"]+)\";"],
+      "datasourceTemplate": "github-releases"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Foundry major versions can break worlds and modules",
+      "matchDepNames": ["felddy/foundryvtt"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    }
+  ]
+}
