@@ -8,8 +8,13 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: chart-hashes-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   fix:
+    if: github.event_name == 'push' || !startsWith(github.head_ref, 'renovate/')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
