@@ -36,7 +36,7 @@ in {
 
       experimental.plugins.crowdsec-bouncer = {
         moduleName = "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin";
-        version = "v1.7.1";
+        version = "v1.8.1";
       };
 
       volumes = [
