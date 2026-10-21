@@ -118,7 +118,7 @@ in {
             containers = [
               {
                 name = "dozzle";
-                image = "amir20/dozzle:v11.3.2";
+                image = "amir20/dozzle:v11.3.4";
                 ports = [{containerPort = 8080;}];
 
                 resources = {
