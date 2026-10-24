@@ -102,12 +102,10 @@ in {
           ];
         };
 
-        definitions.user_attributes.dozzle_roles.expression = ''"admin" in groups ? ["all"] : []'';
-
         identity_providers.oidc = {
           enabled = true;
 
-          authorization_policies.dozzle = {
+          authorization_policies.headlamp = {
             default_policy = "deny";
             rules = [
               {
@@ -117,12 +115,13 @@ in {
             ];
           };
 
-          claims_policies.dozzle = {
-            id_token = ["dozzle_roles"];
-            custom_claims.dozzle_roles = {};
-          };
-
-          scopes.dozzle_roles.claims = ["dozzle_roles"];
+          claims_policies.headlamp.id_token = [
+            "email"
+            "email_verified"
+            "groups"
+            "preferred_username"
+            "name"
+          ];
 
           jwks = [
             {
@@ -135,25 +134,27 @@ in {
 
           clients = [
             {
-              client_id = "dozzle";
-              client_secret = "$argon2id$v=19$m=65536,t=3,p=4$MOoGvHEx89qVCOUfYlLeLA$ZGa28vudD6yYEZ2jFv0wGEziQZBWZeQjOZzbIe0qwUI";
+              client_id = "headlamp";
+              client_secret = "$argon2id$v=19$m=65536,t=3,p=4$Ec5P5iaKZntZEzN5mKHIRw$XWnK0sMyiU9XxU/K6jNC+t2h/LXjZjF+rL5mPJXrJrw";
 
-              client_name = "Dozzle";
-              claims_policy = "dozzle";
+              client_name = "Headlamp";
+              claims_policy = "headlamp";
               public = false;
-              authorization_policy = "dozzle";
+              authorization_policy = "headlamp";
 
               redirect_uris = [
-                "https://dozzle.brunhild.org/api/auth/callback"
+                "https://headlamp.brunhild.org/oidc-callback"
               ];
 
               scopes = [
                 "openid"
                 "profile"
                 "email"
-                "dozzle_roles"
+                "groups"
               ];
 
+              require_pkce = true;
+              pkce_challenge_method = "S256";
               token_endpoint_auth_method = "client_secret_basic";
               userinfo_signed_response_alg = "none";
             }
