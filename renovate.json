@@ -13,21 +13,21 @@
     {
       "customType": "regex",
       "description": "Container images in k3s manifests",
-      "managerFilePatterns": ["/^hosts/.+\\.nix$/"],
+      "managerFilePatterns": ["/^modules/.+\\.nix$/"],
       "matchStrings": ["image = \"(?<depName>[^\":]+):(?<currentValue>[^\"@]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\";"],
       "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",
       "description": "Helm charts in services.k3s.autoDeployCharts",
-      "managerFilePatterns": ["/^hosts/.+\\.nix$/"],
+      "managerFilePatterns": ["/^modules/.+\\.nix$/"],
       "matchStrings": ["name = \"(?<depName>[^\"]+)\";\\s*repo = \"(?<registryUrl>[^\"]+)\";\\s*version = \"(?<currentValue>[^\"]+)\";"],
       "datasourceTemplate": "helm"
     },
     {
       "customType": "regex",
       "description": "Traefik plugins",
-      "managerFilePatterns": ["/^hosts/.+\\.nix$/"],
+      "managerFilePatterns": ["/^modules/.+\\.nix$/"],
       "matchStrings": ["moduleName = \"github\\.com/(?<depName>[^\"]+)\";\\s*version = \"(?<currentValue>[^\"]+)\";"],
       "datasourceTemplate": "github-releases"
     }
