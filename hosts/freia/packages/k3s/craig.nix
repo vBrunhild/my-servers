@@ -345,7 +345,31 @@ in {
     };
   };
 
-  services.k3s.manifests.craig-ingress-route = {
+  services.k3s.manifests.craig-root-not-found = {
+    enable = true;
+    content = {
+      apiVersion = "traefik.io/v1alpha1";
+      kind = "Middleware";
+      metadata = {
+        name = "craig-root-not-found";
+        inherit namespace;
+      };
+      spec.replacePath.path = "/404";
+    };
+  };
+
+  services.k3s.manifests.craig-ingress-route = let
+    route = match: port: middlewares: {
+      inherit match middlewares;
+      kind = "Rule";
+      services = [
+        {
+          name = "craig";
+          inherit port;
+        }
+      ];
+    };
+  in {
     enable = true;
     content = {
       apiVersion = "traefik.io/v1alpha1";
@@ -357,26 +381,9 @@ in {
       spec = {
         entryPoints = ["websecure"];
         routes = [
-          {
-            match = "Host(`${downloadDomain}`)";
-            kind = "Rule";
-            services = [
-              {
-                name = "craig";
-                port = 9100;
-              }
-            ];
-          }
-          {
-            match = "Host(`${downloadDomain}`) && Path(`/api/ennuizel`)";
-            kind = "Rule";
-            services = [
-              {
-                name = "craig";
-                port = 9001;
-              }
-            ];
-          }
+          (route "Host(`${downloadDomain}`)" 9100 [])
+          (route "Host(`${downloadDomain}`) && Path(`/`)" 9100 [{name = "craig-root-not-found";}])
+          (route "Host(`${downloadDomain}`) && Path(`/api/ennuizel`)" 9001 [])
         ];
         tls.certResolver = "cloudflare";
       };
