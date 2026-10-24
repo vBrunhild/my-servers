@@ -74,6 +74,11 @@ in {
               default_redirection_url = "https://brunhild.org";
             }
           ];
+          redis = {
+            enabled = true;
+            host = "authelia-redis.authelia.svc.cluster.local";
+            password.disabled = true;
+          };
         };
 
         storage = {
@@ -153,6 +158,7 @@ in {
                 "groups"
               ];
 
+              pre_configured_consent_duration = "1y";
               require_pkce = true;
               pkce_challenge_method = "S256";
               token_endpoint_auth_method = "client_secret_basic";
@@ -160,6 +166,119 @@ in {
             }
           ];
         };
+      };
+    };
+  };
+
+  services.k3s.manifests.authelia-redis-pvc = {
+    enable = true;
+    content = {
+      apiVersion = "v1";
+      kind = "PersistentVolumeClaim";
+      metadata = {
+        name = "authelia-redis-data";
+        namespace = "authelia";
+      };
+      spec = {
+        accessModes = ["ReadWriteOnce"];
+        storageClassName = "local-path";
+        resources.requests.storage = "100Mi";
+      };
+    };
+  };
+
+  services.k3s.manifests.authelia-redis-deployment = {
+    enable = true;
+    content = {
+      apiVersion = "apps/v1";
+      kind = "Deployment";
+      metadata = {
+        name = "authelia-redis";
+        namespace = "authelia";
+      };
+      spec = {
+        replicas = 1;
+        strategy.type = "Recreate";
+        selector.matchLabels.app = "authelia-redis";
+        template = {
+          metadata.labels.app = "authelia-redis";
+          spec = {
+            containers = [
+              {
+                name = "redis";
+                image = "redis:7.4.11-bookworm";
+                args = ["--save" "60 1"];
+                ports = [{containerPort = 6379;}];
+
+                resources = {
+                  requests = {
+                    cpu = "10m";
+                    memory = "16Mi";
+                  };
+                  limits.memory = "128Mi";
+                };
+
+                volumeMounts = [
+                  {
+                    name = "data";
+                    mountPath = "/data";
+                  }
+                ];
+
+                readinessProbe = {
+                  exec.command = ["redis-cli" "ping"];
+                  initialDelaySeconds = 5;
+                  periodSeconds = 10;
+                };
+              }
+            ];
+
+            volumes = [
+              {
+                name = "data";
+                persistentVolumeClaim.claimName = "authelia-redis-data";
+              }
+            ];
+          };
+        };
+      };
+    };
+  };
+
+  services.k3s.manifests.authelia-redis-service = {
+    enable = true;
+    content = {
+      apiVersion = "v1";
+      kind = "Service";
+      metadata = {
+        name = "authelia-redis";
+        namespace = "authelia";
+      };
+      spec = {
+        selector.app = "authelia-redis";
+        ports = [{port = 6379;}];
+      };
+    };
+  };
+
+  services.k3s.manifests.authelia-redis-network-policy = {
+    enable = true;
+    content = {
+      apiVersion = "networking.k8s.io/v1";
+      kind = "NetworkPolicy";
+      metadata = {
+        name = "authelia-redis";
+        namespace = "authelia";
+      };
+      spec = {
+        podSelector.matchLabels.app = "authelia-redis";
+        policyTypes = ["Ingress"];
+        ingress = [
+          {
+            from = [{podSelector.matchLabels."app.kubernetes.io/name" = "authelia";}];
+            ports = [{port = 6379;}];
+          }
+        ];
       };
     };
   };
