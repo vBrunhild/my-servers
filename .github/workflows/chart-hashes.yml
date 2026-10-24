@@ -38,7 +38,7 @@ jobs:
               exit 1
             fi
             echo "$chart: $specified -> $got"
-            grep -rlF "$specified" hosts | xargs sed -i "s|$specified|$got|g"
+            grep -rlF "$specified" modules | xargs sed -i "s|$specified|$got|g"
           done
 
       - name: Evaluate system

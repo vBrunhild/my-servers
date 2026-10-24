@@ -1,3 +1,0 @@
-{
-  kubectl = import ./kubectl.nix;
-}
