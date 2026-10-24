@@ -22,11 +22,14 @@ in {
     default = {};
   };
 
-  config.flake.nixosConfigurations = lib.mapAttrs (_: host:
+  config.flake.nixosConfigurations = lib.mapAttrs (name: host:
     inputs.nixpkgs.lib.nixosSystem {
       modules = [
         host.module
-        {nixpkgs.hostPlatform = lib.mkDefault host.system;}
+        {
+          networking.hostName = lib.mkDefault name;
+          nixpkgs.hostPlatform = lib.mkDefault host.system;
+        }
       ];
     })
   config.configurations.nixos;
