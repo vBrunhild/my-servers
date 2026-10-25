@@ -19,6 +19,7 @@ in {
       modules.packages
       modules.secrets
       modules.k3s
+      modules.homepage
       modules.authelia
       modules.craig
       modules.crowdsec

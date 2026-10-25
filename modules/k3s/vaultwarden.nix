@@ -3,6 +3,12 @@
     inherit (config) kubectl;
     secrets = config.age.secrets;
   in {
+    homepage.apps.vaultwarden = {
+      title = "Vaultwarden";
+      url = "https://vaultwarden.brunhild.org";
+      icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/vaultwarden.svg";
+    };
+
     kubectl.secrets.vaultwarden-admin-token = {
       namespace = "vaultwarden";
       file = secrets.vaultwarden-admin-token.path;

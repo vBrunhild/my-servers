@@ -26,6 +26,13 @@
             "[CERTIFICATE_EXPIRATION] > 168h"
           ];
         })
+        (publicEndpoint "Homepage" "https://home.brunhild.org" {
+          client.ignore-redirect = true;
+          conditions = [
+            "[STATUS] == any(302, 401)"
+            "[CERTIFICATE_EXPIRATION] > 168h"
+          ];
+        })
         (publicEndpoint "Authelia" "https://auth.brunhild.org/api/health" {})
         (publicEndpoint "Vaultwarden" "https://vaultwarden.brunhild.org/alive" {})
         (publicEndpoint "Headlamp" "https://headlamp.brunhild.org" {})
@@ -39,6 +46,12 @@
       ];
     };
   in {
+    homepage.apps.gatus = {
+      title = "Status";
+      url = "https://status.brunhild.org";
+      icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/gatus.svg";
+    };
+
     services.k3s.manifests.gatus-namespace = {
       enable = true;
       content = {

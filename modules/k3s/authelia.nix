@@ -2,6 +2,13 @@
   flake.modules.nixos.authelia = {config, ...}: let
     inherit (config.age) secrets;
   in {
+    homepage.apps.authelia = {
+      title = "Account";
+      url = "https://auth.brunhild.org/settings";
+      icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/authelia.svg";
+      groups = [];
+    };
+
     kubectl.secrets.authelia-oidc-jwk = {
       namespace = "authelia";
       key = "oidc.jwk.RS256.pem";
@@ -72,7 +79,7 @@
               {
                 subdomain = "auth";
                 domain = "brunhild.org";
-                default_redirection_url = "https://brunhild.org";
+                default_redirection_url = "https://home.brunhild.org";
               }
             ];
             redis = {
@@ -95,6 +102,10 @@
           access_control = {
             default_policy = "deny";
             rules = [
+              {
+                domain = "home.brunhild.org";
+                policy = "one_factor";
+              }
               {
                 domain = "foundryvtt.brunhild.org";
                 subject = ["group:admin" "group:foundryvtt"];

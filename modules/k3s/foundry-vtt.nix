@@ -3,6 +3,13 @@
     inherit (config) kubectl;
     secrets = config.age.secrets;
   in {
+    homepage.apps.foundryvtt = {
+      title = "Foundry VTT";
+      url = "https://foundryvtt.brunhild.org";
+      icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/foundry-vtt.png";
+      groups = ["admin" "foundryvtt"];
+    };
+
     kubectl.secrets.foundry-admin-key = {
       namespace = "foundryvtt";
       file = secrets.foundry-admin-key.path;
