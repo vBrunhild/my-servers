@@ -2,6 +2,12 @@
   flake.modules.nixos.headlamp = {config, ...}: let
     inherit (config.age) secrets;
   in {
+    homepage.apps.headlamp = {
+      title = "Headlamp";
+      url = "https://headlamp.brunhild.org";
+      icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/headlamp.svg";
+    };
+
     kubectl.secrets.headlamp-oidc = {
       namespace = "headlamp";
       key = "OIDC_CLIENT_SECRET";
