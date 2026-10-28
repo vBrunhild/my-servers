@@ -10,6 +10,7 @@ in {
   "files/craig-postgres-password.age".publicKeys = [brunhild freia];
   "files/crowdsec-bouncer-key.age".publicKeys = [brunhild freia];
   "files/foundry-admin-key.age".publicKeys = [brunhild freia];
+  "files/foundry-auth-proxy-users.age".publicKeys = [brunhild freia];
   "files/foundry-license-key.age".publicKeys = [brunhild freia];
   "files/foundry-password.age".publicKeys = [brunhild freia];
   "files/foundry-username.age".publicKeys = [brunhild freia];
