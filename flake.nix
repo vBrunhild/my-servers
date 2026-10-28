@@ -9,6 +9,11 @@
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     import-tree.url = "github:denful/import-tree";
 
+    foundry-auth-proxy = {
+      url = "github:vBrunhild/foundry-auth-proxy";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";

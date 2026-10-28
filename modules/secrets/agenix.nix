@@ -11,6 +11,7 @@ in {
       "craig-postgres-password"
       "crowdsec-bouncer-key"
       "foundry-admin-key"
+      "foundry-auth-proxy-users"
       "foundry-license-key"
       "foundry-password"
       "foundry-username"

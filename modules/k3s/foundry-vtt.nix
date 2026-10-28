@@ -1,7 +1,24 @@
-{
-  flake.modules.nixos.foundry-vtt = {config, ...}: let
+{inputs, ...}: {
+  flake.modules.nixos.foundry-vtt = {
+    config,
+    pkgs,
+    ...
+  }: let
     inherit (config) kubectl;
     secrets = config.age.secrets;
+
+    namespace = "foundryvtt";
+
+    proxyImage = inputs.foundry-auth-proxy.packages.${pkgs.stdenv.hostPlatform.system}.image;
+
+    proxyConfig = {
+      foundryURL = "http://127.0.0.1:30000";
+      listen = ":8080";
+      userHeader = "Remote-User";
+      onUnmapped = "fallthrough";
+      trustedProxies = ["10.42.0.0/16"];
+      usersFile = "/secrets/users/value";
+    };
   in {
     homepage.apps.foundryvtt = {
       title = "Foundry VTT";
@@ -10,24 +27,33 @@
       groups = ["admin" "foundryvtt"];
     };
 
-    kubectl.secrets.foundry-admin-key = {
-      namespace = "foundryvtt";
-      file = secrets.foundry-admin-key.path;
-    };
+    services.k3s.images = [proxyImage];
 
-    kubectl.secrets.foundry-license-key = {
-      namespace = "foundryvtt";
-      file = secrets.foundry-license-key.path;
-    };
+    kubectl.secrets = {
+      foundry-admin-key = {
+        inherit namespace;
+        file = secrets.foundry-admin-key.path;
+      };
 
-    kubectl.secrets.foundry-password = {
-      namespace = "foundryvtt";
-      file = secrets.foundry-password.path;
-    };
+      foundry-license-key = {
+        inherit namespace;
+        file = secrets.foundry-license-key.path;
+      };
 
-    kubectl.secrets.foundry-username = {
-      namespace = "foundryvtt";
-      file = secrets.foundry-username.path;
+      foundry-password = {
+        inherit namespace;
+        file = secrets.foundry-password.path;
+      };
+
+      foundry-username = {
+        inherit namespace;
+        file = secrets.foundry-username.path;
+      };
+
+      foundry-auth-proxy-users = {
+        inherit namespace;
+        file = secrets.foundry-auth-proxy-users.path;
+      };
     };
 
     systemd.tmpfiles.settings."foundryvtt" = {
@@ -99,7 +125,13 @@
           };
           selector.matchLabels.app = "foundryvtt";
           template = {
-            metadata.labels.app = "foundryvtt";
+            metadata = {
+              labels.app = "foundryvtt";
+              annotations = {
+                "checksum/auth-proxy-config" = builtins.hashString "sha256" (builtins.toJSON proxyConfig);
+                "checksum/auth-proxy-image" = builtins.baseNameOf proxyImage;
+              };
+            };
             spec = {
               securityContext = {
                 runAsUser = 1000;
@@ -181,12 +213,63 @@
                     periodSeconds = 10;
                   };
                 }
+                {
+                  name = "auth-proxy";
+                  image = "${proxyImage.imageName}:${proxyImage.imageTag}";
+                  imagePullPolicy = "Never";
+                  ports = [{containerPort = 8080;}];
+
+                  resources = {
+                    requests = {
+                      cpu = "10m";
+                      memory = "8Mi";
+                    };
+                    limits.memory = "64Mi";
+                  };
+
+                  securityContext = {
+                    runAsNonRoot = true;
+                    allowPrivilegeEscalation = false;
+                    readOnlyRootFilesystem = true;
+                    capabilities.drop = ["ALL"];
+                  };
+
+                  volumeMounts = [
+                    {
+                      name = "auth-proxy-config";
+                      mountPath = "/etc/foundry-auth-proxy";
+                      readOnly = true;
+                    }
+                    {
+                      name = "auth-proxy-users";
+                      mountPath = "/secrets/users";
+                      readOnly = true;
+                    }
+                  ];
+
+                  readinessProbe = {
+                    httpGet = {
+                      path = "/api/status";
+                      port = 8080;
+                    };
+                    initialDelaySeconds = 10;
+                    periodSeconds = 10;
+                  };
+                }
               ];
 
               volumes = [
                 {
                   name = "data";
                   persistentVolumeClaim.claimName = "foundryvtt-data";
+                }
+                {
+                  name = "auth-proxy-config";
+                  configMap.name = "foundryvtt-auth-proxy";
+                }
+                {
+                  name = "auth-proxy-users";
+                  secret.secretName = "foundry-auth-proxy-users";
                 }
               ];
             };
@@ -209,7 +292,45 @@
           ports = [
             {
               port = 80;
-              targetPort = 30000;
+              targetPort = 8080;
+            }
+          ];
+        };
+      };
+    };
+
+    services.k3s.manifests.foundryvtt-auth-proxy-config = {
+      enable = true;
+      content = {
+        apiVersion = "v1";
+        kind = "ConfigMap";
+        metadata = {
+          name = "foundryvtt-auth-proxy";
+          inherit namespace;
+        };
+        data."config.json" = builtins.toJSON proxyConfig;
+      };
+    };
+
+    services.k3s.manifests.foundryvtt-network-policy = {
+      enable = true;
+      content = {
+        apiVersion = "networking.k8s.io/v1";
+        kind = "NetworkPolicy";
+        metadata = {
+          name = "foundryvtt";
+          inherit namespace;
+        };
+        spec = {
+          podSelector.matchLabels.app = "foundryvtt";
+          policyTypes = ["Ingress"];
+          ingress = [
+            {
+              from = [
+                {namespaceSelector.matchLabels."kubernetes.io/metadata.name" = "traefik-system";}
+                {namespaceSelector.matchLabels."kubernetes.io/metadata.name" = "gatus";}
+              ];
+              ports = [{port = 8080;}];
             }
           ];
         };
