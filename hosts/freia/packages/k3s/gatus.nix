@@ -78,7 +78,7 @@ in {
             containers = [
               {
                 name = "gatus";
-                image = "twinproduction/gatus:v5.37.0";
+                image = "twinproduction/gatus:v5.38.0";
                 ports = [{containerPort = 8080;}];
 
                 resources = {
