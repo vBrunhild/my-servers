@@ -65,6 +65,17 @@
         configMap = {
           theme = "dark";
 
+          server.endpoints.authz.forward-auth = {
+            implementation = "ForwardAuth";
+            authn_strategies = [
+              {
+                name = "HeaderAuthorization";
+                schemes = ["Basic"];
+              }
+              {name = "CookieSession";}
+            ];
+          };
+
           authentication_backend.file = {
             enabled = true;
             path = "/secrets/authelia-users/users_database.yml";

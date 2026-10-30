@@ -26,6 +26,7 @@ in {
       modules.foundry-vtt
       modules.gatus
       modules.headlamp
+      modules.radar
       modules.traefik
       modules.vaultwarden
       modules.restic
