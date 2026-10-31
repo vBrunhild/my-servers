@@ -17,6 +17,8 @@
     };
 
     env = name: value: {inherit name value;};
+
+    security = import ./_security.nix;
   in {
     kubectl.secrets.craig-bot-token = {
       inherit namespace;
@@ -87,11 +89,15 @@
           template = {
             metadata.labels.app = "craig-postgres";
             spec = {
+              securityContext = security.pod;
+
               containers = [
                 {
                   name = "postgres";
                   image = "postgres:17.11-bookworm";
                   ports = [{containerPort = 5432;}];
+
+                  securityContext = security.container // security.nonRoot 999;
 
                   resources = {
                     requests = {
@@ -168,27 +174,33 @@
           selector.matchLabels.app = "craig-redis";
           template = {
             metadata.labels.app = "craig-redis";
-            spec.containers = [
-              {
-                name = "redis";
-                image = "redis:7.4.11-bookworm";
-                ports = [{containerPort = 6379;}];
+            spec = {
+              securityContext = security.pod;
 
-                resources = {
-                  requests = {
-                    cpu = "20m";
-                    memory = "32Mi";
+              containers = [
+                {
+                  name = "redis";
+                  image = "redis:7.4.11-bookworm";
+                  ports = [{containerPort = 6379;}];
+
+                  securityContext = security.container // security.nonRoot 999;
+
+                  resources = {
+                    requests = {
+                      cpu = "20m";
+                      memory = "32Mi";
+                    };
+                    limits.memory = "256Mi";
                   };
-                  limits.memory = "256Mi";
-                };
 
-                readinessProbe = {
-                  exec.command = ["redis-cli" "ping"];
-                  initialDelaySeconds = 5;
-                  periodSeconds = 10;
-                };
-              }
-            ];
+                  readinessProbe = {
+                    exec.command = ["redis-cli" "ping"];
+                    initialDelaySeconds = 5;
+                    periodSeconds = 10;
+                  };
+                }
+              ];
+            };
           };
         };
       };
@@ -228,9 +240,12 @@
             spec = {
               enableServiceLinks = false;
 
+              securityContext = security.pod;
+
               containers = [
                 {
                   name = "craig";
+                  securityContext = security.container;
                   image = "ghcr.io/craigchat/craig:master@sha256:a147abc377d94ac5ba0252f014633f9ca17418e2ee3a13a32da86230c73e3b1d";
                   ports = [
                     {

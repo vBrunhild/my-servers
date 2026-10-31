@@ -2,6 +2,8 @@
   flake.modules.nixos.crowdsec = {config, ...}: let
     inherit (config) kubectl;
     inherit (config.age) secrets;
+
+    security = import ./_security.nix;
   in {
     kubectl.secrets.crowdsec-bouncer-key = {
       namespace = "crowdsec";
@@ -37,6 +39,8 @@
         };
 
         lapi = {
+          podSecurityContext = security.pod;
+
           resources = {
             requests = {
               cpu = "50m";

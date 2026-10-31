@@ -2,6 +2,8 @@
   flake.modules.nixos.vaultwarden = {config, ...}: let
     inherit (config) kubectl;
     secrets = config.age.secrets;
+
+    security = import ./_security.nix;
   in {
     homepage.apps.vaultwarden = {
       title = "Vaultwarden";
@@ -56,11 +58,17 @@
           template = {
             metadata.labels.app = "vaultwarden";
             spec = {
+              securityContext = security.pod;
+
               containers = [
                 {
                   name = "vaultwarden";
                   image = "vaultwarden/server:1.37.4";
                   ports = [{containerPort = 80;}];
+
+                  securityContext =
+                    security.container
+                    // {capabilities = security.container.capabilities // {add = ["NET_BIND_SERVICE"];};};
 
                   resources = {
                     requests = {

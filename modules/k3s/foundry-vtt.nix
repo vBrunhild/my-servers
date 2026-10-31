@@ -9,6 +9,8 @@
 
     namespace = "foundryvtt";
 
+    security = import ./_security.nix;
+
     proxyImage = inputs.foundry-auth-proxy.packages.${pkgs.stdenv.hostPlatform.system}.image;
 
     proxyConfig = {
@@ -133,17 +135,21 @@
               };
             };
             spec = {
-              securityContext = {
-                runAsUser = 1000;
-                runAsGroup = 1000;
-                fsGroup = 1000;
-              };
+              securityContext =
+                security.pod
+                // {
+                  runAsUser = 1000;
+                  runAsGroup = 1000;
+                  fsGroup = 1000;
+                };
 
               containers = [
                 {
                   name = "foundryvtt";
                   image = "felddy/foundryvtt:13.351";
                   ports = [{containerPort = 30000;}];
+
+                  securityContext = security.container // {runAsNonRoot = true;};
 
                   resources = {
                     requests = {
@@ -227,12 +233,12 @@
                     limits.memory = "64Mi";
                   };
 
-                  securityContext = {
-                    runAsNonRoot = true;
-                    allowPrivilegeEscalation = false;
-                    readOnlyRootFilesystem = true;
-                    capabilities.drop = ["ALL"];
-                  };
+                  securityContext =
+                    security.container
+                    // {
+                      runAsNonRoot = true;
+                      readOnlyRootFilesystem = true;
+                    };
 
                   volumeMounts = [
                     {
