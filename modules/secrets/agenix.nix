@@ -15,7 +15,6 @@ in {
       "foundry-license-key"
       "foundry-password"
       "foundry-username"
-      "headlamp-oidc"
       "k3s-token"
       "restic-b2"
       "vaultwarden-admin-token"

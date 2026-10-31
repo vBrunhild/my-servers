@@ -35,7 +35,6 @@
         })
         (publicEndpoint "Authelia" "https://auth.brunhild.org/api/health" {})
         (publicEndpoint "Vaultwarden" "https://vaultwarden.brunhild.org/alive" {})
-        (publicEndpoint "Headlamp" "https://headlamp.brunhild.org" {})
         (publicEndpoint "Radar" "https://radar.brunhild.org" {})
         {
           name = "Foundry VTT";

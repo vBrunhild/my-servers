@@ -14,7 +14,6 @@ in {
   "files/foundry-license-key.age".publicKeys = [brunhild freia];
   "files/foundry-password.age".publicKeys = [brunhild freia];
   "files/foundry-username.age".publicKeys = [brunhild freia];
-  "files/headlamp-oidc.age".publicKeys = [brunhild freia];
   "files/k3s-token.age".publicKeys = [brunhild freia];
   "files/restic-b2.age".publicKeys = [brunhild freia];
   "files/vaultwarden-admin-token.age".publicKeys = [brunhild freia];
