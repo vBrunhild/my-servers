@@ -1,5 +1,7 @@
 {
   flake.modules.nixos.gatus = let
+    security = import ./_security.nix;
+
     publicEndpoint = name: url: extra:
       {
         inherit name url;
@@ -35,7 +37,13 @@
         })
         (publicEndpoint "Authelia" "https://auth.brunhild.org/api/health" {})
         (publicEndpoint "Vaultwarden" "https://vaultwarden.brunhild.org/alive" {})
-        (publicEndpoint "Radar" "https://radar.brunhild.org" {})
+        (publicEndpoint "Radar" "https://radar.brunhild.org" {
+          client.ignore-redirect = true;
+          conditions = [
+            "[STATUS] == any(302, 401)"
+            "[CERTIFICATE_EXPIRATION] > 168h"
+          ];
+        })
         {
           name = "Foundry VTT";
           group = "Applications";
@@ -89,11 +97,18 @@
           template = {
             metadata.labels.app = "gatus";
             spec = {
+              securityContext = security.pod;
+
               containers = [
                 {
                   name = "gatus";
                   image = "twinproduction/gatus:v5.37.0";
                   ports = [{containerPort = 8080;}];
+
+                  securityContext =
+                    security.container
+                    // security.nonRoot 65534
+                    // {readOnlyRootFilesystem = true;};
 
                   resources = {
                     requests = {
