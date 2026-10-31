@@ -25,6 +25,7 @@ in {
       modules.crowdsec
       modules.foundry-vtt
       modules.gatus
+      modules.network-policies
       modules.radar
       modules.traefik
       modules.vaultwarden
@@ -53,6 +54,9 @@ in {
     profiles.system = {
       user = "root";
       sshUser = "root";
+      confirmTimeout = 180;
+      activationTimeout = 600;
+      # remoteBuild = true;
       path =
         deployPkgs.deploy-rs.lib.activate.nixos
         config.flake.nixosConfigurations.freia;
