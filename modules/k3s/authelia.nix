@@ -78,8 +78,8 @@
 
           authentication_backend.file = {
             enabled = true;
-            path = "/secrets/authelia-users/users_database.yml";
             watch = true;
+            path = "/secrets/authelia-users/users_database.yml";
           };
 
           session = {
@@ -126,66 +126,6 @@
                 domain = "*.brunhild.org";
                 subject = "group:admin";
                 policy = "one_factor";
-              }
-            ];
-          };
-
-          identity_providers.oidc = {
-            enabled = true;
-
-            authorization_policies.headlamp = {
-              default_policy = "deny";
-              rules = [
-                {
-                  policy = "one_factor";
-                  subject = "group:admin";
-                }
-              ];
-            };
-
-            claims_policies.headlamp.id_token = [
-              "email"
-              "email_verified"
-              "groups"
-              "preferred_username"
-              "name"
-            ];
-
-            jwks = [
-              {
-                key_id = "main";
-                algorithm = "RS256";
-                use = "sig";
-                key.path = "/secrets/authelia-oidc-jwk/oidc.jwk.RS256.pem";
-              }
-            ];
-
-            clients = [
-              {
-                client_id = "headlamp";
-                client_secret = "$argon2id$v=19$m=65536,t=3,p=4$Ec5P5iaKZntZEzN5mKHIRw$XWnK0sMyiU9XxU/K6jNC+t2h/LXjZjF+rL5mPJXrJrw";
-
-                client_name = "Headlamp";
-                claims_policy = "headlamp";
-                public = false;
-                authorization_policy = "headlamp";
-
-                redirect_uris = [
-                  "https://headlamp.brunhild.org/oidc-callback"
-                ];
-
-                scopes = [
-                  "openid"
-                  "profile"
-                  "email"
-                  "groups"
-                ];
-
-                pre_configured_consent_duration = "1y";
-                require_pkce = true;
-                pkce_challenge_method = "S256";
-                token_endpoint_auth_method = "client_secret_basic";
-                userinfo_signed_response_alg = "none";
               }
             ];
           };

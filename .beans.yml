@@ -1,0 +1,6 @@
+beans:
+    path: .beans
+    prefix: s-
+    id_length: 5
+    default_status: todo
+    default_type: task
