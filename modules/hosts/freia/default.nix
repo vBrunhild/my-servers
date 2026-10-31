@@ -15,6 +15,7 @@ in {
       ./_networking.nix
       inputs.determinate.nixosModules.default
       inputs.disko.nixosModules.disko
+      modules.hardening
       modules.nix
       modules.packages
       modules.secrets
