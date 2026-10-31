@@ -6,6 +6,8 @@
   }: let
     inherit (lib) types mkOption;
 
+    security = import ./_security.nix;
+
     namespace = "homepage";
 
     apps =
@@ -204,11 +206,21 @@
                 annotations."checksum/config" = builtins.hashString "sha256" (builtins.toJSON configData);
               };
               spec = {
+                securityContext = security.pod;
+
                 containers = [
                   {
                     name = "caddy";
                     image = "caddy:2.11.7-alpine";
                     ports = [{containerPort = 8080;}];
+
+                    securityContext =
+                      security.container
+                      // security.nonRoot 65534
+                      // {
+                        readOnlyRootFilesystem = true;
+                        capabilities = security.container.capabilities // {add = ["NET_BIND_SERVICE"];};
+                      };
 
                     resources = {
                       requests = {
@@ -228,6 +240,14 @@
                         name = "site";
                         mountPath = "/srv";
                         readOnly = true;
+                      }
+                      {
+                        name = "caddy-data";
+                        mountPath = "/data";
+                      }
+                      {
+                        name = "caddy-config";
+                        mountPath = "/config";
                       }
                     ];
 
@@ -252,6 +272,14 @@
                 ];
 
                 volumes = [
+                  {
+                    name = "caddy-data";
+                    emptyDir = {};
+                  }
+                  {
+                    name = "caddy-config";
+                    emptyDir = {};
+                  }
                   {
                     name = "caddyfile";
                     configMap = {

@@ -1,6 +1,8 @@
 {
   flake.modules.nixos.authelia = {config, ...}: let
     inherit (config.age) secrets;
+
+    security = import ./_security.nix;
   in {
     homepage.apps.authelia = {
       title = "Account";
@@ -54,6 +56,10 @@
               memory = "64Mi";
             };
             limits.memory = "512Mi";
+          };
+
+          securityContext = {
+            inherit (security) container pod;
           };
         };
 
@@ -166,12 +172,19 @@
           template = {
             metadata.labels.app = "authelia-redis";
             spec = {
+              securityContext = security.pod;
+
               containers = [
                 {
                   name = "redis";
                   image = "redis:7.4.11-bookworm";
                   args = ["--save" "60 1"];
                   ports = [{containerPort = 6379;}];
+
+                  securityContext =
+                    security.container
+                    // security.nonRoot 999
+                    // {readOnlyRootFilesystem = true;};
 
                   resources = {
                     requests = {
