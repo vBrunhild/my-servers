@@ -28,34 +28,8 @@
           limits.memory = "512Mi";
         };
 
-        auth = {
-          mode = "proxy";
-          proxy = {
-            userHeader = "Remote-User";
-            groupsHeader = "Remote-Groups";
-          };
-        };
-      };
-    };
-
-    services.k3s.manifests.radar-admin = {
-      enable = true;
-      content = {
-        apiVersion = "rbac.authorization.k8s.io/v1";
-        kind = "ClusterRoleBinding";
-        metadata.name = "radar-admin";
-        roleRef = {
-          apiGroup = "rbac.authorization.k8s.io";
-          kind = "ClusterRole";
-          name = "cluster-admin";
-        };
-        subjects = [
-          {
-            apiGroup = "rbac.authorization.k8s.io";
-            kind = "Group";
-            name = "admin";
-          }
-        ];
+        auth.mode = "none";
+        allowedHosts = ["radar.brunhild.org"];
       };
     };
 
