@@ -36,6 +36,7 @@
       exclude = [
         "/var/lib/foundryvtt/container_cache"
         "/var/lib/foundryvtt/Logs"
+        "/var/lib/rancher/k3s/storage/*_craig_*"
       ];
 
       backupPrepareCommand = lib.concatMapStrings stopApp stoppedApps;
