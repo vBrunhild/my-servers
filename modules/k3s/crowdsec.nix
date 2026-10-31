@@ -76,7 +76,13 @@
             }
             {
               namespace = "authelia";
-              podName = "authelia-*";
+              podName = "authelia-[^r]*";
+              program = "authelia";
+              poll_without_inotify = true;
+            }
+            {
+              namespace = "authelia";
+              podName = "authelia-r[^e]*";
               program = "authelia";
               poll_without_inotify = true;
             }

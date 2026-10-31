@@ -54,6 +54,10 @@
         k8s-app = "crowdsec";
         type = "lapi";
       } [fromTraefik {podSelector.matchLabels.type = "agent";}] [8080])
+      (allow "crowdsec" "crowdsec-agent" {
+        k8s-app = "crowdsec";
+        type = "agent";
+      } [{podSelector = {};}] [6060])
       (allow "gatus" "gatus" {app = "gatus";} [fromTraefik] [8080])
       (allow "homepage" "homepage" {app = "homepage";} [fromTraefik] [8080])
       (allow "radar" "radar" {
