@@ -508,11 +508,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793333443,
-        "narHash": "sha256-ZYZ1hq8azh4d2EMmNNETzQDFyWtEfSlPwwHKMAnVPm8=",
+        "lastModified": 1793474330,
+        "narHash": "sha256-KCALMGV6xeZnxLhGg+PQVg4TP13IEDXPeAwxSbIsKsQ=",
         "owner": "vBrunhild",
         "repo": "foundry-auth-proxy",
-        "rev": "4bfb3a1c6a6f558fdfd4c15a9ce551bcbf2e5266",
+        "rev": "d98c2253a0984007805d4232e2c34defb47af788",
         "type": "github"
       },
       "original": {
