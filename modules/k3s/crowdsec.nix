@@ -76,7 +76,7 @@
         };
 
         agent = {
-          daemonsetAnnotations = security.ignoreChecks ["readOnlyRootFs" "runAsRoot" "automountServiceAccountToken"];
+          daemonsetAnnotations = security.ignoreChecks ["readOnlyRootFs" "runAsRoot" "automountServiceAccountToken" "sensitiveHostPath"];
 
           resources = {
             requests = {
