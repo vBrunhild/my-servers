@@ -121,7 +121,6 @@
         metadata = {
           name = "foundryvtt";
           namespace = "foundryvtt";
-          annotations = security.ignoreChecks ["readOnlyRootFs"];
         };
         spec = {
           replicas = 1;
@@ -155,7 +154,12 @@
                   image = "felddy/foundryvtt:13.351";
                   ports = [{containerPort = 30000;}];
 
-                  securityContext = security.container // {runAsNonRoot = true;};
+                  securityContext =
+                    security.container
+                    // {
+                      runAsNonRoot = true;
+                      readOnlyRootFilesystem = true;
+                    };
 
                   resources = {
                     requests = {
@@ -216,6 +220,18 @@
                     {
                       name = "data";
                       mountPath = "/data";
+                    }
+                    {
+                      name = "tmp";
+                      mountPath = "/tmp";
+                    }
+                    {
+                      name = "resources";
+                      mountPath = "/home/node/resources";
+                    }
+                    {
+                      name = "local";
+                      mountPath = "/home/node/.local";
                     }
                   ];
 
@@ -301,6 +317,18 @@
                 {
                   name = "data";
                   persistentVolumeClaim.claimName = "foundryvtt-data";
+                }
+                {
+                  name = "tmp";
+                  emptyDir.sizeLimit = "256Mi";
+                }
+                {
+                  name = "resources";
+                  emptyDir.sizeLimit = "1Gi";
+                }
+                {
+                  name = "local";
+                  emptyDir.sizeLimit = "64Mi";
                 }
                 {
                   name = "auth-proxy-config";
