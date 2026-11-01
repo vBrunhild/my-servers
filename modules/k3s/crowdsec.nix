@@ -51,7 +51,7 @@
         };
 
         lapi = {
-          deployAnnotations = security.ignoreChecks ["readOnlyRootFs" "runAsRoot"];
+          deployAnnotations = security.ignoreChecks ["readOnlyRootFs" "runAsRoot" "automountServiceAccountToken"];
           podSecurityContext = security.pod;
 
           resources = {
@@ -76,7 +76,7 @@
         };
 
         agent = {
-          daemonsetAnnotations = security.ignoreChecks ["readOnlyRootFs" "runAsRoot"];
+          daemonsetAnnotations = security.ignoreChecks ["readOnlyRootFs" "runAsRoot" "automountServiceAccountToken"];
 
           resources = {
             requests = {

@@ -34,6 +34,8 @@
 
         extraArgs = ["--mcp-read-only"];
 
+        podAnnotations = security.ignoreChecks ["automountServiceAccountToken"];
+
         resources = {
           requests = {
             cpu = "50m";
