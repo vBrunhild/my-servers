@@ -135,6 +135,7 @@
               };
             };
             spec = {
+              automountServiceAccountToken = false;
               securityContext =
                 security.pod
                 // {

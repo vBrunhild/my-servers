@@ -97,6 +97,7 @@
           template = {
             metadata.labels.app = "gatus";
             spec = {
+              automountServiceAccountToken = false;
               securityContext = security.pod;
 
               containers = [

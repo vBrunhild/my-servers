@@ -206,6 +206,7 @@
                 annotations."checksum/config" = builtins.hashString "sha256" (builtins.toJSON configData);
               };
               spec = {
+                automountServiceAccountToken = false;
                 securityContext = security.pod;
 
                 containers = [

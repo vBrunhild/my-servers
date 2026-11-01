@@ -58,6 +58,7 @@
           template = {
             metadata.labels.app = "vaultwarden";
             spec = {
+              automountServiceAccountToken = false;
               securityContext = security.pod;
 
               containers = [
