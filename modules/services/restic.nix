@@ -37,6 +37,7 @@
         "/var/lib/foundryvtt/container_cache"
         "/var/lib/foundryvtt/Logs"
         "/var/lib/rancher/k3s/storage/*_craig_*"
+        "/var/lib/rancher/k3s/storage/*_monitoring_*"
       ];
 
       backupPrepareCommand = lib.concatMapStrings stopApp stoppedApps;
