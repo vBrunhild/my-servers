@@ -35,7 +35,10 @@
       content = {
         apiVersion = "v1";
         kind = "Namespace";
-        metadata.name = namespace;
+        metadata = {
+          name = namespace;
+          labels = security.namespaceLabels;
+        };
       };
     };
 

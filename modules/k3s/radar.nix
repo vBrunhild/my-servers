@@ -1,10 +1,24 @@
 {
-  flake.modules.nixos.radar = {
+  flake.modules.nixos.radar = let
+    security = import ./_security.nix;
+  in {
     homepage.apps.radar = {
       title = "Radar";
       url = "https://radar.brunhild.org";
       icon = "https://radarhq.io/radar/icon-512.png";
       groups = ["admin"];
+    };
+
+    services.k3s.manifests.radar-namespace = {
+      enable = true;
+      content = {
+        apiVersion = "v1";
+        kind = "Namespace";
+        metadata = {
+          name = "radar";
+          labels = security.namespaceLabels;
+        };
+      };
     };
 
     services.k3s.autoDeployCharts.radar = {
