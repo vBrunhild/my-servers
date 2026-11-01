@@ -139,6 +139,19 @@
       };
     };
 
+    services.k3s.manifests.authelia-default-service-account = {
+      enable = true;
+      content = {
+        apiVersion = "v1";
+        kind = "ServiceAccount";
+        metadata = {
+          name = "default";
+          namespace = "authelia";
+        };
+        automountServiceAccountToken = false;
+      };
+    };
+
     services.k3s.manifests.authelia-redis-pvc = {
       enable = true;
       content = {
@@ -172,6 +185,7 @@
           template = {
             metadata.labels.app = "authelia-redis";
             spec = {
+              automountServiceAccountToken = false;
               securityContext = security.pod;
 
               containers = [

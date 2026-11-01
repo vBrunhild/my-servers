@@ -89,6 +89,7 @@
           template = {
             metadata.labels.app = "craig-postgres";
             spec = {
+              automountServiceAccountToken = false;
               securityContext = security.pod;
 
               containers = [
@@ -182,6 +183,7 @@
           template = {
             metadata.labels.app = "craig-redis";
             spec = {
+              automountServiceAccountToken = false;
               securityContext = security.pod;
 
               containers = [
@@ -254,6 +256,7 @@
             spec = {
               enableServiceLinks = false;
 
+              automountServiceAccountToken = false;
               securityContext = security.pod;
 
               containers = [
