@@ -218,6 +218,15 @@
                     initialDelaySeconds = 10;
                     periodSeconds = 10;
                   };
+
+                  livenessProbe = {
+                    httpGet = {
+                      path = "/api/status";
+                      port = 30000;
+                    };
+                    periodSeconds = 30;
+                    timeoutSeconds = 5;
+                  };
                 }
                 {
                   name = "auth-proxy";
@@ -260,6 +269,12 @@
                     };
                     initialDelaySeconds = 10;
                     periodSeconds = 10;
+                  };
+
+                  livenessProbe = {
+                    tcpSocket.port = 8080;
+                    initialDelaySeconds = 10;
+                    periodSeconds = 30;
                   };
                 }
               ];

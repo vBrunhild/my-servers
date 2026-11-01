@@ -206,6 +206,13 @@
                     initialDelaySeconds = 5;
                     periodSeconds = 10;
                   };
+
+                  livenessProbe = {
+                    exec.command = ["redis-cli" "ping"];
+                    initialDelaySeconds = 15;
+                    periodSeconds = 30;
+                    timeoutSeconds = 5;
+                  };
                 }
               ];
 
