@@ -197,6 +197,18 @@
                       name = "FOUNDRY_TELEMETRY";
                       value = "false";
                     }
+                    {
+                      name = "FOUNDRY_MINIFY_STATIC_FILES";
+                      value = "true";
+                    }
+                    {
+                      name = "FOUNDRY_COMPRESS_WEBSOCKET";
+                      value = "true";
+                    }
+                    {
+                      name = "FOUNDRY_WORLD";
+                      value = "mage-the-ascencion";
+                    }
                   ];
 
                   volumeMounts = [
