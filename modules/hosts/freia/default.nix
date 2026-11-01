@@ -30,6 +30,7 @@ in {
       modules.radar
       modules.traefik
       modules.vaultwarden
+      modules.victoria-metrics
       modules.restic
       modules.ssh
     ];

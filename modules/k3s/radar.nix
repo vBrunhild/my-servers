@@ -32,7 +32,10 @@
       values = {
         ingress.enabled = false;
 
-        extraArgs = ["--mcp-read-only"];
+        extraArgs = [
+          "--mcp-read-only"
+          "--prometheus-url=http://victoria-metrics.monitoring.svc:8428"
+        ];
 
         podAnnotations = security.ignoreChecks ["automountServiceAccountToken"];
 

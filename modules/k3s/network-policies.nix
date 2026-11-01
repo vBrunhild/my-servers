@@ -41,6 +41,7 @@
       (denyAll "crowdsec")
       (denyAll "gatus")
       (denyAll "homepage")
+      (denyAll "monitoring")
       (denyAll "radar")
       (denyAll "vaultwarden")
 
@@ -60,6 +61,12 @@
       } [{podSelector = {};}] [6060])
       (allow "gatus" "gatus" {app = "gatus";} [fromTraefik] [8080])
       (allow "homepage" "homepage" {app = "homepage";} [fromTraefik] [8080])
+      (allow "monitoring" "victoria-metrics" {
+        "app.kubernetes.io/name" = "victoria-metrics-single";
+      } [(namespaceFrom "radar")] [8428])
+      (allow "monitoring" "kube-state-metrics" {
+        "app.kubernetes.io/name" = "kube-state-metrics";
+      } [{podSelector.matchLabels."app.kubernetes.io/name" = "victoria-metrics-single";}] [8080])
       (allow "radar" "radar" {
         "app.kubernetes.io/name" = "radar";
       } [fromTraefik] [9280])
