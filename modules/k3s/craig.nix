@@ -84,7 +84,7 @@
         metadata = {
           name = "craig-postgres";
           inherit namespace;
-          annotations = security.ignoreReadOnlyRootFs;
+          annotations = security.ignoreChecks ["readOnlyRootFs"];
         };
         spec = {
           replicas = 1;
@@ -180,7 +180,7 @@
         metadata = {
           name = "craig-redis";
           inherit namespace;
-          annotations = security.ignoreReadOnlyRootFs;
+          annotations = security.ignoreChecks ["readOnlyRootFs"];
         };
         spec = {
           replicas = 1;
@@ -251,7 +251,7 @@
         metadata = {
           name = "craig";
           inherit namespace;
-          annotations = security.ignoreReadOnlyRootFs;
+          annotations = security.ignoreChecks ["readOnlyRootFs" "runAsRoot"];
         };
         spec = {
           replicas = 1;

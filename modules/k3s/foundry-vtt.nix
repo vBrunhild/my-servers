@@ -121,7 +121,7 @@
         metadata = {
           name = "foundryvtt";
           namespace = "foundryvtt";
-          annotations = security.ignoreReadOnlyRootFs;
+          annotations = security.ignoreChecks ["readOnlyRootFs"];
         };
         spec = {
           replicas = 1;
