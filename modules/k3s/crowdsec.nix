@@ -51,7 +51,7 @@
         };
 
         lapi = {
-          deployAnnotations = security.ignoreReadOnlyRootFs;
+          deployAnnotations = security.ignoreChecks ["readOnlyRootFs" "runAsRoot"];
           podSecurityContext = security.pod;
 
           resources = {
@@ -76,7 +76,7 @@
         };
 
         agent = {
-          daemonsetAnnotations = security.ignoreReadOnlyRootFs;
+          daemonsetAnnotations = security.ignoreChecks ["readOnlyRootFs" "runAsRoot"];
 
           resources = {
             requests = {

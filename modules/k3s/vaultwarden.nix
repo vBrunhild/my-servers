@@ -53,7 +53,7 @@
         metadata = {
           name = "vaultwarden";
           namespace = "vaultwarden";
-          annotations = security.ignoreReadOnlyRootFs;
+          annotations = security.ignoreChecks ["readOnlyRootFs" "runAsRoot"];
         };
         spec = {
           replicas = 1;

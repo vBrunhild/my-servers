@@ -6,7 +6,7 @@
 
   pod.seccompProfile.type = "RuntimeDefault";
 
-  ignoreReadOnlyRootFs."radarhq.io/ignore-checks" = "readOnlyRootFs";
+  ignoreChecks = checks: {"radarhq.io/ignore-checks" = builtins.concatStringsSep "," checks;};
 
   namespaceLabels = {
     "pod-security.kubernetes.io/enforce" = "baseline";
