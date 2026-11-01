@@ -18,6 +18,18 @@
       file = secrets.crowdsec-bouncer-key.path;
     };
 
+    services.k3s.manifests.crowdsec-namespace = {
+      enable = true;
+      content = {
+        apiVersion = "v1";
+        kind = "Namespace";
+        metadata = {
+          name = "crowdsec";
+          labels = security.namespaceLabels // {"pod-security.kubernetes.io/enforce" = "privileged";};
+        };
+      };
+    };
+
     services.k3s.autoDeployCharts.crowdsec = {
       name = "crowdsec";
       repo = "https://crowdsecurity.github.io/helm-charts";

@@ -21,7 +21,10 @@
       content = {
         apiVersion = "v1";
         kind = "Namespace";
-        metadata.name = "vaultwarden";
+        metadata = {
+          name = "vaultwarden";
+          labels = security.namespaceLabels;
+        };
       };
     };
 

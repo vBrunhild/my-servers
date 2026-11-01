@@ -139,6 +139,18 @@
       };
     };
 
+    services.k3s.manifests.authelia-namespace = {
+      enable = true;
+      content = {
+        apiVersion = "v1";
+        kind = "Namespace";
+        metadata = {
+          name = "authelia";
+          labels = security.namespaceLabels;
+        };
+      };
+    };
+
     services.k3s.manifests.authelia-default-service-account = {
       enable = true;
       content = {

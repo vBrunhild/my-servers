@@ -65,7 +65,10 @@
       content = {
         apiVersion = "v1";
         kind = "Namespace";
-        metadata.name = "gatus";
+        metadata = {
+          name = "gatus";
+          labels = security.namespaceLabels;
+        };
       };
     };
 

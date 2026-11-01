@@ -71,7 +71,10 @@
       content = {
         apiVersion = "v1";
         kind = "Namespace";
-        metadata.name = "foundryvtt";
+        metadata = {
+          name = "foundryvtt";
+          labels = security.namespaceLabels;
+        };
       };
     };
 

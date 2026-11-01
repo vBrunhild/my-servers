@@ -2,7 +2,21 @@
   flake.modules.nixos.traefik = {config, ...}: let
     inherit (config) kubectl;
     secrets = config.age.secrets;
+
+    security = import ./_security.nix;
   in {
+    services.k3s.manifests.traefik-namespace = {
+      enable = true;
+      content = {
+        apiVersion = "v1";
+        kind = "Namespace";
+        metadata = {
+          name = "traefik-system";
+          labels = security.namespaceLabels;
+        };
+      };
+    };
+
     kubectl.secrets.cloudflare-api-token = {
       namespace = "traefik-system";
       file = secrets.cloudflare-api-token.path;
