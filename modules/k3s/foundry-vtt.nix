@@ -139,6 +139,7 @@
               };
             };
             spec = {
+              hostname = "foundryvtt";
               automountServiceAccountToken = false;
               securityContext =
                 security.pod
