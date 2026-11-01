@@ -53,6 +53,7 @@
         metadata = {
           name = "vaultwarden";
           namespace = "vaultwarden";
+          annotations = security.ignoreReadOnlyRootFs;
         };
         spec = {
           replicas = 1;

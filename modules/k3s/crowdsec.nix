@@ -51,6 +51,7 @@
         };
 
         lapi = {
+          deployAnnotations = security.ignoreReadOnlyRootFs;
           podSecurityContext = security.pod;
 
           resources = {
@@ -75,6 +76,8 @@
         };
 
         agent = {
+          daemonsetAnnotations = security.ignoreReadOnlyRootFs;
+
           resources = {
             requests = {
               cpu = "50m";

@@ -47,6 +47,7 @@
         };
 
         pod = {
+          annotations = security.ignoreReadOnlyRootFs;
           kind = "Deployment";
           replicas = 1;
           strategy.type = "Recreate";
