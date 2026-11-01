@@ -63,7 +63,7 @@
       (allow "homepage" "homepage" {app = "homepage";} [fromTraefik] [8080])
       (allow "monitoring" "victoria-metrics" {
         "app.kubernetes.io/name" = "victoria-metrics-single";
-      } [(namespaceFrom "radar")] [8428])
+      } [(namespaceFrom "radar") fromTraefik] [8428])
       (allow "monitoring" "kube-state-metrics" {
         "app.kubernetes.io/name" = "kube-state-metrics";
       } [{podSelector.matchLabels."app.kubernetes.io/name" = "victoria-metrics-single";}] [8080])

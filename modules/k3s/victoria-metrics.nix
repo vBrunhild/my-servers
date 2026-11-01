@@ -15,6 +15,13 @@
       kubernetes_sd_configs = [{role = "node";}];
     };
   in {
+    homepage.apps.victoria-metrics = {
+      title = "Metrics";
+      url = "https://metrics.brunhild.org/vmui";
+      icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png";
+      groups = ["admin"];
+    };
+
     services.k3s.manifests.monitoring-namespace = {
       enable = true;
       content = {
@@ -104,6 +111,40 @@
               ];
             };
           };
+        };
+      };
+    };
+
+    services.k3s.manifests.victoria-metrics-ingress-route = {
+      enable = true;
+      content = {
+        apiVersion = "traefik.io/v1alpha1";
+        kind = "IngressRoute";
+        metadata = {
+          name = "victoria-metrics";
+          inherit namespace;
+        };
+        spec = {
+          entryPoints = ["websecure"];
+          routes = [
+            {
+              match = "Host(`metrics.brunhild.org`)";
+              kind = "Rule";
+              middlewares = [
+                {
+                  name = "authelia";
+                  namespace = "traefik-system";
+                }
+              ];
+              services = [
+                {
+                  name = "victoria-metrics";
+                  port = 8428;
+                }
+              ];
+            }
+          ];
+          tls.certResolver = "cloudflare";
         };
       };
     };
