@@ -194,7 +194,7 @@
               containers = [
                 {
                   name = "redis";
-                  image = "redis:7.4.11-bookworm";
+                  image = "redis:7.4.12-bookworm";
                   ports = [{containerPort = 6379;}];
 
                   securityContext = security.container // security.nonRoot 999;
