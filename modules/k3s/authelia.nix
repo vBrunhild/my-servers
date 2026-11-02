@@ -54,7 +54,7 @@
           resources = {
             requests = {
               cpu = "50m";
-              memory = "64Mi";
+              memory = "384Mi";
             };
             limits.memory = "512Mi";
           };
@@ -215,7 +215,7 @@
 
                   resources = {
                     requests = {
-                      cpu = "10m";
+                      cpu = "50m";
                       memory = "16Mi";
                     };
                     limits.memory = "128Mi";
