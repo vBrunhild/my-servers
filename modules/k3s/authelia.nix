@@ -204,7 +204,7 @@
               containers = [
                 {
                   name = "redis";
-                  image = "redis:7.4.12-bookworm";
+                  image = "redis:8.4.0-bookworm";
                   args = ["--save" "60 1"];
                   ports = [{containerPort = 6379;}];
 
