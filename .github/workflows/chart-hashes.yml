@@ -41,11 +41,26 @@ jobs:
               exit 1
             fi
             echo "$chart: $specified -> $got"
-            grep -rlF "$specified" modules | xargs sed -i "s|$specified|$got|g"
+            mapfile -t files < <(grep -rlF "$specified" modules || true)
+            if [ ${#files[@]} -eq 0 ]; then
+              echo "$chart: stale hash $specified not found under modules/"
+              exit 1
+            fi
+            sed -i "s|$specified|$got|g" "${files[@]}"
           done
 
       - name: Evaluate system
         run: nix eval .#nixosConfigurations.freia.config.system.build.toplevel.drvPath
+
+      - name: Fail on stale hashes
+        if: "!startsWith(github.head_ref || github.ref_name, 'renovate/')"
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git diff
+          echo "::error::Chart hashes are stale, apply the diff above"
+          exit 1
 
       - name: Push fixed hashes
         if: startsWith(github.head_ref || github.ref_name, 'renovate/')
