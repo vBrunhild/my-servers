@@ -68,7 +68,7 @@
               containers = [
                 {
                   name = "vaultwarden";
-                  image = "vaultwarden/server:1.37.4";
+                  image = "vaultwarden/server:1.37.5";
                   ports = [{containerPort = 80;}];
 
                   securityContext =
