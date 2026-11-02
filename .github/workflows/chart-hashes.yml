@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: chart-hashes-${{ github.head_ref || github.ref_name }}
+  group: chart-hashes-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -26,23 +26,13 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes pipe-operators
 
-      - name: Recompute stale chart hashes
-        run: |
-          set -euo pipefail
-          charts=$(nix eval --json .#nixosConfigurations.freia.config.services.k3s.autoDeployCharts --apply builtins.attrNames | jq -r '.[]')
-          for chart in $charts; do
-            if out=$(nix build --no-link ".#nixosConfigurations.freia.config.services.k3s.autoDeployCharts.${chart}.package" 2>&1); then
-              continue
-            fi
-            specified=$(grep -oP 'specified:\s+\Ksha256-\S+' <<<"$out" || true)
-            got=$(grep -oP 'got:\s+\Ksha256-\S+' <<<"$out" || true)
-            if [ -z "$specified" ] || [ -z "$got" ]; then
-              echo "$out"
-              exit 1
-            fi
-            echo "$chart: $specified -> $got"
-            grep -rlF "$specified" modules | xargs sed -i "s|$specified|$got|g"
-          done
+      - name: Fix chart hashes
+        if: startsWith(github.head_ref || github.ref_name, 'renovate/')
+        run: nix run .#fix-chart-hashes
+
+      - name: Check chart hashes
+        if: "!startsWith(github.head_ref || github.ref_name, 'renovate/')"
+        run: nix run .#fix-chart-hashes -- --check
 
       - name: Evaluate system
         run: nix eval .#nixosConfigurations.freia.config.system.build.toplevel.drvPath
