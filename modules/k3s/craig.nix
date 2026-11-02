@@ -201,7 +201,7 @@
 
                   resources = {
                     requests = {
-                      cpu = "20m";
+                      cpu = "50m";
                       memory = "32Mi";
                     };
                     limits.memory = "256Mi";
@@ -283,8 +283,8 @@
 
                   resources = {
                     requests = {
-                      cpu = "100m";
-                      memory = "512Mi";
+                      cpu = "200m";
+                      memory = "1Gi";
                     };
                     limits.memory = "2Gi";
                   };
