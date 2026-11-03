@@ -269,7 +269,7 @@
                 {
                   name = "craig";
                   securityContext = security.container;
-                  image = "ghcr.io/craigchat/craig:master@sha256:94b708cdfe6d9285056a395fb01a94ca84b44683bb815e580bbbb768abb3e73f";
+                  image = "ghcr.io/craigchat/craig:master@sha256:621e9e697c03e9ab066b8a650bf5cc2007ac8584285533711535ccb8f48fb1f2";
                   ports = [
                     {
                       name = "ferret";
