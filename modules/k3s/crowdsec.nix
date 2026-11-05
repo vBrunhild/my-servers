@@ -33,8 +33,8 @@
     services.k3s.autoDeployCharts.crowdsec = {
       name = "crowdsec";
       repo = "https://crowdsecurity.github.io/helm-charts";
-      version = "0.24.2";
-      hash = "sha256-s97Skcl5Nz/9MozcQwK3H7FPFm/+SzOTU98ojUFHSVk=";
+      version = "0.24.3";
+      hash = "sha256-sT0x0A/9Qw5UbXaMD6sqSWfYWpGZzrkO+p9A4CbLrAQ=";
       createNamespace = true;
       targetNamespace = "crowdsec";
 
