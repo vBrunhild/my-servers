@@ -25,7 +25,7 @@
     services.k3s.autoDeployCharts.traefik-proxy = {
       name = "traefik";
       repo = "https://helm.traefik.io/traefik";
-      version = "42.2.0";
+      version = "42.3.1";
       hash = "sha256-A+x3Lgyqs589Jl2xQBT1aDKrQg2pjWIQ+D0++QjAd+U=";
       createNamespace = true;
       targetNamespace = "traefik-system";
