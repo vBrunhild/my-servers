@@ -215,7 +215,7 @@
                 containers = [
                   {
                     name = "caddy";
-                    image = "caddy:2.11.7-alpine";
+                    image = "caddy:2.11.9-alpine";
                     ports = [{containerPort = 8080;}];
 
                     securityContext =
