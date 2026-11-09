@@ -38,7 +38,7 @@
       name = "victoria-metrics-single";
       repo = "https://victoriametrics.github.io/helm-charts";
       version = "0.51.0";
-      hash = "sha256-BR0bGc3AXoDPZ/qn1bsbOTNTeAJW0ffNXK2zx35nsd0=";
+      hash = "sha256-I5ku3I6oFUi5jWqsuUxKY+XyuggdTEpUlXIssMu+Lig=";
       createNamespace = true;
       targetNamespace = namespace;
 
