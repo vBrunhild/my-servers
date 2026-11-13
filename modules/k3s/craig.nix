@@ -99,7 +99,7 @@
               containers = [
                 {
                   name = "postgres";
-                  image = "postgres:17.11-bookworm";
+                  image = "postgres:17.12-bookworm";
                   ports = [{containerPort = 5432;}];
 
                   securityContext = security.container // security.nonRoot 999;
