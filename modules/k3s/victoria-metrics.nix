@@ -37,7 +37,7 @@
     services.k3s.autoDeployCharts.victoria-metrics = {
       name = "victoria-metrics-single";
       repo = "https://victoriametrics.github.io/helm-charts";
-      version = "0.50.0";
+      version = "0.51.0";
       hash = "sha256-BR0bGc3AXoDPZ/qn1bsbOTNTeAJW0ffNXK2zx35nsd0=";
       createNamespace = true;
       targetNamespace = namespace;
