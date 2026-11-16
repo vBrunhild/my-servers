@@ -153,7 +153,7 @@
       name = "kube-state-metrics";
       repo = "https://prometheus-community.github.io/helm-charts";
       version = "9.0.1";
-      hash = "sha256-G3QtiZ0tX3fT7xIvFKhVktyKt2wTwVuxGzxxnx3p/ys=";
+      hash = "sha256-Ggb4u0TFRa3lMvJu0R2K6EdTIg6MAuk8EpYY2RV0IKU=";
       createNamespace = true;
       targetNamespace = namespace;
 
