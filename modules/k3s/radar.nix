@@ -25,7 +25,7 @@
       name = "radar";
       repo = "https://skyhook-io.github.io/helm-charts";
       version = "1.21.1";
-      hash = "sha256-thugS++e9Z5JvtE/zljET+e9BdFAJuecZkCjkN3o2Kc=";
+      hash = "sha256-zlvMsC6COLYZOTH+e9RISGbKofsl+0ge6/jhfYABpvo=";
       createNamespace = true;
       targetNamespace = "radar";
 
