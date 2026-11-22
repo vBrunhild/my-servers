@@ -152,8 +152,8 @@
     services.k3s.autoDeployCharts.kube-state-metrics = {
       name = "kube-state-metrics";
       repo = "https://prometheus-community.github.io/helm-charts";
-      version = "8.8.0";
-      hash = "sha256-G3QtiZ0tX3fT7xIvFKhVktyKt2wTwVuxGzxxnx3p/ys=";
+      version = "9.1.0";
+      hash = "sha256-6vc6gBAl77qFam0VZ8ZIiKGTAK1kKQjliQw8VWy2CyA=";
       createNamespace = true;
       targetNamespace = namespace;
 
